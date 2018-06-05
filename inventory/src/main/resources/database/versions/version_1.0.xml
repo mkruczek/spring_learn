@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="0001" author="mkruczek">
+        <createTable tableName="room">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)"/>
+            <column name="description" type="text"/>
+            <column name="photo" type="bytea"/>
+            <column name="room_category_id" type="uuid"/>
+        </createTable>
+
+        <createTable tableName="room_category">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)"/>
+            <column name="description" type="text"/>
+        </createTable>
+
+        <createTable tableName="booking">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="from" type="timestamp"/>
+            <column name="until" type="timestamp"/>
+            <column name="guest_name" type="varchar(50)"/>
+            <column name="guest_email" type="varchar(50)"/>
+            <column name="guest_phone" type="varchar(50)"/>
+            <column name="room_id" type="uuid"/>
+        </createTable>
+
+        <createTable tableName="invoice">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="uri" type="varchar(250)"/>
+            <column name="booking_id" type="uuid"/>
+        </createTable>
+
+        <createTable tableName="pricing">
+            <column name="id" type="uuid">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="price_one" type="number"/>
+            <column name="price_two" type="number"/>
+            <column name="price_three" type="number"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="invoice" baseColumnNames="booking_id" constraintName="invoice_to_booking"
+                                 referencedTableName="booking"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="booking" baseColumnNames="room_id" constraintName="booking_to_room"
+                                 referencedTableName="room"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="room" baseColumnNames="room_category_id" constraintName="room_to_room_category"
+                                 referencedTableName="room_category"
+                                 referencedColumnNames="id" onDelete="CASCADE" onUpdate="CASCADE"/>
+
+    </changeSet>
+</databaseChangeLog>
